@@ -1,0 +1,30 @@
+R_DEF: Internal format may change without notice
+local
+drawable discover
+drawable events
+drawable ic_close
+drawable ic_hide_password
+drawable ic_list
+drawable ic_search
+drawable ic_show_password
+drawable profile
+font inter_bold
+font inter_regular
+font inter_semi_bold
+font rale_way_bold
+font rale_way_extra_bold
+font rale_way_extra_light
+font rale_way_light
+font rale_way_medium
+font rale_way_regular
+font rale_way_semi_bold
+string biometric_prompt_description
+string biometric_prompt_title
+string cancel
+string events
+string home
+string nothing_found
+string retry
+string search
+string settings
+string something_went_wrong
