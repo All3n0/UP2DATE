@@ -1,4 +1,4 @@
-package io.eldohub.feature.newsfeed.screen
+package io.eldohub.feature.favourites
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,13 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun NewsFeedScreen() {
+fun FavouritesScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "News Feed Screen",
+            text = "Favourites Screen",
             style = MaterialTheme.typography.headlineMedium
         )
     }
