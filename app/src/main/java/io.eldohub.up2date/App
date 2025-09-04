@@ -1,12 +1,6 @@
 package io.eldohub.up2date
 
 import android.app.Application
-import io.eldohub.eldomet.di.DataModule
-import io.eldohub.eldomet.di.DomainModule
-import io.eldohub.eldomet.di.databaseModule
-import io.eldohub.feature.events.di.EventsFeatureModule
-import io.eldohub.feature.home.di.HomeFeatureModule
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 class App: Application() {
