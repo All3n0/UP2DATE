@@ -1,16 +1,51 @@
 [versions]
-agp = "8.11.1"
-kotlin = "2.0.21"
-coreKtx = "1.10.1"
+agp = "8.8.2"
+awsAndroidSdkS3 = "2.57.0"
+kotlin = "2.2.0"
+coreKtx = "1.16.0"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.6.1"
-activityCompose = "1.8.0"
-composeBom = "2024.09.00"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+kotlinSerializationVersion = "2.0.20"
+ktorClientAndroid = "2.3.5"
+lifecycleRuntimeKtx = "2.8.7"
+activityCompose = "1.10.1"
+composeBom = "2025.06.01"
+appcompat = "1.7.1"
+mapsCompose = "4.2.0"
+material = "1.12.0"
+biometricKtx = "1.2.0-alpha05"
+lottieCompose = "6.2.0"
+playServicesMaps = "19.2.0"
+roomCompiler = "2.7.2"
+timber = "4.7.1"
+lifecycleViewmodelComposeAndroid = "2.8.7"
+composeNavigation = "2.9.1"
+gson = "2.11.0"
+accompanist = "0.28.0"
+accompanistPagerIndicator = "0.24.2-alpha"
+accompanistPager = "0.28.0"
+accompanistInsets = "0.17.0"
+composeMaterial = "1.3.2"
+koin = "3.5.0"
+ktor = "2.3.7"
+ktorOkhttp = "2.1.2"
+kotlinSerialization = "1.9.22"
+kotlinxSerializationJson = "1.6.3"
+coil = "2.5.0"
+materialIcons = "1.7.8"
+dataStore = "1.1.7"
+roomDatabase = "2.7.2"
+adapters = "3.2.0-alpha11"
+kspDevTools = "2.2.0-2.0.2"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
+aws-android-sdk-core = { module = "com.amazonaws:aws-android-sdk-core", version.ref = "awsAndroidSdkS3" }
+aws-android-sdk-s3 = { module = "com.amazonaws:aws-android-sdk-s3", version.ref = "awsAndroidSdkS3" }
+jetbrains-kotlin-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization-core", version.ref = "kotlinSerializationVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -24,9 +59,49 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorClientAndroid" }
+maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-biometric = { group = "androidx.biometric", name = "biometric-ktx", version.ref = "biometricKtx" }
+lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieCompose" }
+lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottieCompose" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+androidx-lifecycle-viewmodel-compose-android = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose-android", version.ref = "lifecycleViewmodelComposeAndroid" }
+androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation" }
+android-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+androidx-compose-accompanist = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
+accompanist-indicator = { group = "com.google.accompanist", name = "accompanist-pager-indicators", version.ref = "accompanistPagerIndicator" }
+accompanist-pager = { group = "com.google.accompanist", name = "accompanist-pager", version.ref = "accompanistPager" }
+accompanist-insets = { group = "com.google.accompanist", name = "accompanist-insets", version.ref = "accompanistInsets" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "composeMaterial" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
+koin-junit = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-android = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktorOkhttp" }
+ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
+ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-content_negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+kotlin-serialization = { group = "org.jetbrains.kotlin", name = "kotlinx-serialization-core", version.ref = "kotlinSerialization" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+material-icons = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIcons" }
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
+room-database = { group = "androidx.room", name = "room-ktx", version.ref = "roomDatabase" }
+androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomDatabase" }
+androidx-adapters = { group = "androidx.databinding", name = "adapters", version.ref = "adapters" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomDatabase" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+android-library = { id = "com.android.library", version.ref = "agp" }
+ksp-dev-tools = { id = "com.google.devtools.ksp", version.ref = "kspDevTools" }
+kotlin-serialization-plugin = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }

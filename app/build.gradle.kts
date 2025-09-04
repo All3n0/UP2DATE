@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.up2date"
-    compileSdk = 36
+    namespace = "io.eldohub.up2date"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.up2date"
+        applicationId = "io.eldohub.up2date"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -41,14 +41,32 @@ android {
 
 dependencies {
 
+    implementation(project(":core:ui"))
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":feature:newsFeed"))
+    implementation(project(":feature:articles"))
+    implementation(project(":feature:favourites"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
+    implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    implementation(libs.room.database)
+
+    // koin
+    implementation(libs.koin.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.test)
+    implementation(libs.koin.junit)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -1,16 +1,16 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/user/AndroidStudioProjects/eldomet/data/src/main/AndroidManifest.xml:2:1-4:12
-INJECTED from /home/user/AndroidStudioProjects/eldomet/data/src/main/AndroidManifest.xml:2:1-4:12
+ADDED from /home/user/AndroidStudioProjects/UP2DATE/data/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest1271990095570545986.xml:2:13-83
+INJECTED from /home/user/AndroidStudioProjects/UP2DATE/data/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest1271990095570545986.xml:2:13-83
 	package
-		INJECTED from /home/user/AndroidStudioProjects/eldomet/data/src/main/AndroidManifest.xml
+		INJECTED from /home/user/AndroidStudioProjects/UP2DATE/data/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest1271990095570545986.xml
 	xmlns:android
-		ADDED from /home/user/AndroidStudioProjects/eldomet/data/src/main/AndroidManifest.xml:2:11-69
+		ADDED from /home/user/AndroidStudioProjects/UP2DATE/data/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest1271990095570545986.xml:2:23-81
 uses-sdk
-INJECTED from /home/user/AndroidStudioProjects/eldomet/data/src/main/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /home/user/AndroidStudioProjects/eldomet/data/src/main/AndroidManifest.xml
-INJECTED from /home/user/AndroidStudioProjects/eldomet/data/src/main/AndroidManifest.xml
+INJECTED from /home/user/AndroidStudioProjects/UP2DATE/data/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest1271990095570545986.xml reason: use-sdk injection requested
+INJECTED from /home/user/AndroidStudioProjects/UP2DATE/data/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest1271990095570545986.xml
+INJECTED from /home/user/AndroidStudioProjects/UP2DATE/data/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest1271990095570545986.xml
 	android:targetSdkVersion
-		INJECTED from /home/user/AndroidStudioProjects/eldomet/data/src/main/AndroidManifest.xml
+		INJECTED from /home/user/AndroidStudioProjects/UP2DATE/data/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest1271990095570545986.xml
 	android:minSdkVersion
-		INJECTED from /home/user/AndroidStudioProjects/eldomet/data/src/main/AndroidManifest.xml
+		INJECTED from /home/user/AndroidStudioProjects/UP2DATE/data/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest1271990095570545986.xml
