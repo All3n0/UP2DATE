@@ -34,7 +34,8 @@ android {
 }
 
 dependencies {
-
+    implementation(project(":feature:favourites"))
+    implementation(project(":feature:articles"))
     implementation(project(":core:ui"))
     implementation(project(":domain"))
 

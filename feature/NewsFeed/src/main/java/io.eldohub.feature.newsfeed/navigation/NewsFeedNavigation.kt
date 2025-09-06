@@ -1,4 +1,4 @@
-package io.eldohub.feature.newsfeed
+package io.eldohub.feature.newsfeed.navigation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.WindowInsets
@@ -16,19 +16,18 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import io.eldohub.feature.articles.ArticlesScreen
-import io.eldohub.feature.favourites.FavouritesScreen
-import io.eldohub.feature.newsfeed.screen.NewsFeedScreen
 import kotlinx.coroutines.launch
+import io.eldohub.feature.newsfeed.screen.NewsFeedScreen
+import io.eldohub.feature.favourites.screen.main.FavouritesScreen
+
 
 private const val TOTAL_TABS = 3
 const val NEWS_FEED_NAVIGATION = "newsfeed/newsfeed_navigation"
 
-fun NavController.navigateToNewsFeedRoot() = navigate(NEWS_FEED_NAVIGATION) {
-    popUpTo(NEWS_FEED_NAVIGATION) { inclusive = true }
-}
-
 @OptIn(ExperimentalPagerApi::class)
-fun NavGraphBuilder.newsFeedNavGraph(navController: NavController) {
+fun NavGraphBuilder.newsFeedFeatureNavGraph(
+    navController: NavController
+) {
     composable(route = NEWS_FEED_NAVIGATION) {
         val pagerState = rememberPagerState()
         val scope = rememberCoroutineScope()
@@ -38,7 +37,9 @@ fun NavGraphBuilder.newsFeedNavGraph(navController: NavController) {
         Scaffold(
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             bottomBar = {
-                NewsFeedBottomNav(pagerState = pagerState) { page ->
+                NewsFeedBottomNav(
+                    pagerState = pagerState
+                ) { page ->
                     scope.launch {
                         when (page) {
                             NewsFeedPages.NEWS_FEED -> pagerState.scrollToPage(0)
@@ -60,8 +61,8 @@ fun NavGraphBuilder.newsFeedNavGraph(navController: NavController) {
             ) { position ->
                 when (position) {
                     0 -> NewsFeedScreen()
-                    1 -> FavouritesScreen()
-                    2 -> ArticlesScreen()
+                    1 -> FavouritesScreen()  // Use the screen directly
+                    2 -> ArticlesScreen()    // Use the screen directly
                 }
             }
         }

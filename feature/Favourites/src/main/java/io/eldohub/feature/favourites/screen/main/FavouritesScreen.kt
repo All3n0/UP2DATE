@@ -1,4 +1,4 @@
-package io.eldohub.feature.favourites
+package io.eldohub.feature.favourites.screen.main
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
