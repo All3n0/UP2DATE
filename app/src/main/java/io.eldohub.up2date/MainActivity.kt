@@ -1,4 +1,4 @@
-package io.eldohub.newsfeedapp
+package io.eldohub.up2date
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,12 +10,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-
 import io.eldohub.core.ui.theme.Up2DateTheme
 import io.eldohub.feature.newsfeed.navigation.NEWS_FEED_NAVIGATION
 import io.eldohub.feature.newsfeed.navigation.newsFeedFeatureNavGraph
-import io.eldohub.feature.favourites.navigation.favouritesFeatureNavGraph
-import io.eldohub.feature.articles.navigation.articlesFeatureNavGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
 
-            Up2DateTheme  {
+            Up2DateTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -33,14 +30,13 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = NEWS_FEED_NAVIGATION
                     ) {
-                        // Main News Feed feature (with bottom nav + pager)
+                        // Only include the main News Feed feature
+                        // The favourites and articles screens are embedded within the pager
                         newsFeedFeatureNavGraph(navController = navController)
 
-                        // Favourites feature
-                        favouritesFeatureNavGraph(navController = navController)
-
-                        // Articles feature
-                        articlesFeatureNavGraph(navController = navController)
+                        // REMOVE these lines - they don't exist and cause crashes:
+                        // favouritesFeatureNavGraph(navController = navController)
+                        // articlesFeatureNavGraph(navController = navController)
                     }
                 }
             }
