@@ -19,26 +19,22 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
-class Up2dateHttpClientimpl: Up2dateHttpClient {
+class Up2dateHttpClientImpl : Up2dateHttpClient {
 
     companion object {
-        private const val API_KEY_ACTUAL = ""
-        private const val BASE_URL = "https://dummyjson.com/"
-        private const val EVENTS_BASE_URL = "https://public-holidays7.p.rapidapi.com/"
-        private const val WEATHER_BASE_URL = "https://open-weather13.p.rapidapi.com"
-
-        private const val API_KEY = "API_KEY"
-        private const val X_RAPID_API_KEY = "x-rapidapi-key"
+        private const val BASE_URL = "https://newsapi.org/v2/"
+        private const val API_KEY_HEADER = "apiKey"
+        private const val API_KEY = "d538bf5c55de486985f54307164fab0c" // ✅ your actual key
         private const val TIME_OUT = 60_000L
-        private const val TAG = "NetworkClient"
+        private const val TAG = "NewsApiClient"
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    private val eventsHttpClient = HttpClient(Android) {
+    private val newsHttpClient = HttpClient(Android) {
         expectSuccess = false
 
         defaultRequest {
-            url(EVENTS_BASE_URL)
+            url(BASE_URL)
             contentType(ContentType.Application.Json)
         }
 
@@ -53,16 +49,15 @@ class Up2dateHttpClientimpl: Up2dateHttpClient {
                 explicitNulls = false
                 prettyPrint = true
                 isLenient = true
-                ignoreUnknownKeys = false
+                ignoreUnknownKeys = true // ✅ important for News API
                 coerceInputValues = true
-                classDiscriminator = "item_type"
             })
         }
 
         install(Logging) {
             logger = object : Logger {
                 override fun log(message: String) {
-                    Log.d(TAG, "HTTP Log message: $message")
+                    Log.d(TAG, "HTTP Log: $message")
                 }
             }
             level = LogLevel.ALL
@@ -76,83 +71,21 @@ class Up2dateHttpClientimpl: Up2dateHttpClient {
         }
     }
 
-    override fun getEventsClient(apiKey: String?): HttpClient {
-        val apiKey = "N8gntYIsnKmshwxYo0Hky3PquUL9p1chgQcjsnLkHXNC2AkQsW"
-        eventsHttpClient.plugin(HttpSend).intercept { request ->
+    override fun getNewsClient(apiKey: String?): HttpClient {
+        val resolvedApiKey = apiKey ?: API_KEY
+        newsHttpClient.plugin(HttpSend).intercept { request ->
             request.headers {
-                if (contains(X_RAPID_API_KEY)) {
-                    remove(X_RAPID_API_KEY)
+                if (contains(API_KEY_HEADER)) {
+                    remove(API_KEY_HEADER)
                 }
-
-                //  see documentation page
-                append(X_RAPID_API_KEY, apiKey)
+                append(API_KEY_HEADER, resolvedApiKey)
             }
             execute(request)
         }
-        return eventsHttpClient
-    }
-
-    @OptIn(ExperimentalSerializationApi::class)
-    private val weatherHttpClient = HttpClient(Android) {
-        expectSuccess = false
-
-        defaultRequest {
-            url(WEATHER_BASE_URL)
-            contentType(ContentType.Application.Json)
-        }
-
-        install(HttpTimeout) {
-            connectTimeoutMillis = TIME_OUT
-            requestTimeoutMillis = TIME_OUT
-            socketTimeoutMillis = TIME_OUT
-        }
-
-        install(ContentNegotiation) {
-            json(Json {
-                explicitNulls = false
-                prettyPrint = true
-                isLenient = true
-                ignoreUnknownKeys = false
-                coerceInputValues = true
-                classDiscriminator = "item_type"
-            })
-        }
-
-        install(Logging) {
-            logger = object : Logger {
-                override fun log(message: String) {
-                    Log.d(TAG, "HTTP Log message: $message")
-                }
-            }
-            level = LogLevel.ALL
-        }
-
-        HttpResponseValidator {
-            handleResponseExceptionWithRequest { exception, request ->
-                Log.e(TAG, "HTTP Exception: ${exception.localizedMessage}")
-                Log.e(TAG, "Request URL: ${request.url}")
-            }
-        }
-    }
-
-    override fun getWeatherClient(apiKey: String?): HttpClient {
-        val apiKey = "N8gntYIsnKmshwxYo0Hky3PquUL9p1chgQcjsnLkHXNC2AkQsW"
-        weatherHttpClient.plugin(HttpSend).intercept { request ->
-            request.headers {
-                if (contains(X_RAPID_API_KEY)) {
-                    remove(X_RAPID_API_KEY)
-                }
-
-                //  see documentation page
-                append(X_RAPID_API_KEY, apiKey)
-            }
-            execute(request)
-        }
-        return weatherHttpClient
+        return newsHttpClient
     }
 }
 
 interface Up2dateHttpClient {
-    fun getEventsClient(apiKey: String?): HttpClient
-    fun getWeatherClient(apiKey: String?): HttpClient
+    fun getNewsClient(apiKey: String? = null): HttpClient
 }
