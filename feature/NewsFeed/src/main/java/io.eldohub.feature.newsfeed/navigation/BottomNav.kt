@@ -4,16 +4,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
+import io.eldohub.core.ui.theme.*
 
-enum class NewsFeedPages {
-    NEWS_FEED, FAVOURITES, ARTICLES
+enum class NewsFeedPages(val icon: ImageVector, val label: String) {
+    NEWS_FEED(Icons.Default.Home, "Home"),
+    FAVOURITES(Icons.Default.Favorite, "Favourites"),
+    ARTICLES(Icons.Default.Create, "Articles")
 }
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
@@ -22,36 +25,33 @@ fun NewsFeedBottomNav(
     pagerState: PagerState,
     onPageSelected: (NewsFeedPages) -> Unit
 ) {
-    NavigationBar {
-        NavigationBarItem(
-            selected = pagerState.currentPage == 0,
-            onClick = { onPageSelected(NewsFeedPages.NEWS_FEED) },
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.Home,
-                    contentDescription = "News Feed"
+    NavigationBar(
+        containerColor = white,
+        tonalElevation = 6.dp
+    ) {
+        NewsFeedPages.values().forEachIndexed { index, page ->
+            val selected = pagerState.currentPage == index
+            NavigationBarItem(
+                selected = selected,
+                onClick = { onPageSelected(page) },
+                icon = {
+                    Icon(
+                        imageVector = page.icon,
+                        contentDescription = page.label,
+                        tint = if (selected) primary100 else grey50
+                    )
+                },
+                label = {
+                    Text(
+                        text = page.label,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = if (selected) primary100 else grey50
+                    )
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = primary05
                 )
-            }
-        )
-        NavigationBarItem(
-            selected = pagerState.currentPage == 1,
-            onClick = { onPageSelected(NewsFeedPages.FAVOURITES) },
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.Favorite,
-                    contentDescription = "Favourites"
-                )
-            }
-        )
-        NavigationBarItem(
-            selected = pagerState.currentPage == 2,
-            onClick = { onPageSelected(NewsFeedPages.ARTICLES) },
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.Create,
-                    contentDescription = "Articles"
-                )
-            }
-        )
+            )
+        }
     }
 }
