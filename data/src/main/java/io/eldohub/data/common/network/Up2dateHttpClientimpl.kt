@@ -23,7 +23,7 @@ class Up2dateHttpClientImpl : Up2dateHttpClient {
 
     companion object {
         private const val BASE_URL = "https://newsapi.org/v2/"
-        private const val API_KEY_HEADER = "apiKey"
+//       V private const val API_KEY_HEADER = "apiKey"
         private const val API_KEY = "d538bf5c55de486985f54307164fab0c" // ✅ your actual key
         private const val TIME_OUT = 60_000L
         private const val TAG = "NewsApiClient"
@@ -74,16 +74,13 @@ class Up2dateHttpClientImpl : Up2dateHttpClient {
     override fun getNewsClient(apiKey: String?): HttpClient {
         val resolvedApiKey = apiKey ?: API_KEY
         newsHttpClient.plugin(HttpSend).intercept { request ->
-            request.headers {
-                if (contains(API_KEY_HEADER)) {
-                    remove(API_KEY_HEADER)
-                }
-                append(API_KEY_HEADER, resolvedApiKey)
-            }
+            // add apiKey as query param
+            request.url.parameters.append("apiKey", resolvedApiKey)
             execute(request)
         }
         return newsHttpClient
     }
+
 }
 
 interface Up2dateHttpClient {
