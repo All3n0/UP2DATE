@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,7 +16,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import io.eldohub.feature.articles.ArticlesScreen
 import kotlinx.coroutines.launch
-import io.eldohub.feature.newsfeed.screen.NewsFeedScreen
+import io.eldohub.feature.newsfeed.screen.main.NewsFeedScreen
 import io.eldohub.feature.favourites.screen.main.FavouritesScreen
 
 
@@ -60,7 +59,7 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
                 userScrollEnabled = false
             ) { position ->
                 when (position) {
-                    0 -> NewsFeedScreen()
+                    0 -> NewsFeedScreen(onClick = {})
                     1 -> FavouritesScreen()  // Use the screen directly
                     2 -> ArticlesScreen()    // Use the screen directly
                 }

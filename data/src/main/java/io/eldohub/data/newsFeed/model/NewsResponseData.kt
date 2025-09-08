@@ -1,8 +1,8 @@
-package io.eldohub.data.news.model
+package io.eldohub.data.newsFeed.model
 
-import io.eldohub.domain.news.model.NewsResponse
-import io.eldohub.domain.news.model.Article
-import io.eldohub.domain.news.model.Source
+import io.eldohub.domain.newsFeed.model.NewsResponse
+import io.eldohub.domain.newsFeed.model.Article
+import io.eldohub.domain.newsFeed.model.Source
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
