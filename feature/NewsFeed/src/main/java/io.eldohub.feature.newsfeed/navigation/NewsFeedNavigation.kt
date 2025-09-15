@@ -14,11 +14,12 @@ import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import io.eldohub.feature.articles.ArticlesScreen
-import kotlinx.coroutines.launch
-import io.eldohub.feature.newsfeed.screen.main.NewsFeedScreen
+import io.eldohub.feature.articles.screen.main.ArticleListScreen
+import io.eldohub.feature.articles.screen.viewmodels.ArticleViewModel
 import io.eldohub.feature.favourites.screen.main.FavouritesScreen
-
+import io.eldohub.feature.newsfeed.screen.main.NewsFeedScreen
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 private const val TOTAL_TABS = 3
 const val NEWS_FEED_NAVIGATION = "newsfeed/newsfeed_navigation"
@@ -59,9 +60,17 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
                 userScrollEnabled = false
             ) { position ->
                 when (position) {
-                    0 -> NewsFeedScreen(onClick = {})
-                    1 -> FavouritesScreen()  // Use the screen directly
-                    2 -> ArticlesScreen()    // Use the screen directly
+                    0 -> NewsFeedScreen(onClick = {})  // your news feed
+                    1 -> FavouritesScreen()
+                    2 -> {
+                        val articleViewModel: ArticleViewModel = koinViewModel()
+                        ArticleListScreen(
+                            viewModel = articleViewModel,
+                            onArticleClick = { articleId ->
+                                navController.navigate("articles/detail_route/$articleId")
+                            }
+                        )
+                    }
                 }
             }
         }

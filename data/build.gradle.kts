@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.room.database)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.adapters)
+    implementation(libs.engage.core)
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.koin.core)

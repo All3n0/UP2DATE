@@ -38,6 +38,7 @@ dataStore = "1.1.7"
 roomDatabase = "2.7.2"
 adapters = "3.2.0-alpha11"
 kspDevTools = "2.2.0-2.0.2"
+engageCore = "1.5.9"
 
 
 [libraries]
@@ -96,6 +97,7 @@ room-database = { group = "androidx.room", name = "room-ktx", version.ref = "roo
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomDatabase" }
 androidx-adapters = { group = "androidx.databinding", name = "adapters", version.ref = "adapters" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomDatabase" }
+engage-core = { group = "com.google.android.engage", name = "engage-core", version.ref = "engageCore" }
 
 
 [plugins]

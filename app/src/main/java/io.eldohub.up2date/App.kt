@@ -1,5 +1,6 @@
 package io.eldohub.up2date
 
+import ArticleFeatureModule
 import NewsFeedFeatureModule
 import android.app.Application
 import io.eldohub.up2date.di.DataModule
@@ -17,7 +18,8 @@ class App : Application() {
             modules(
                 DataModule,
                 DomainModule,
-                NewsFeedFeatureModule
+                NewsFeedFeatureModule,
+                ArticleFeatureModule
             )
         }
     }

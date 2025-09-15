@@ -85,4 +85,5 @@ class Up2dateHttpClientImpl : Up2dateHttpClient {
 
 interface Up2dateHttpClient {
     fun getNewsClient(apiKey: String? = null): HttpClient
+
 }
