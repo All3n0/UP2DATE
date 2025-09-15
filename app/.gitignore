@@ -1,1 +1,15 @@
-/build
+# Android / Gradle
+.gradle/
+local.properties
+**/build/
+**/captures/
+.cxx/
+*.apk
+*.ap_
+*.dex
+*.class
+*.log
+
+# IDE files
+.idea/
+*.iml
