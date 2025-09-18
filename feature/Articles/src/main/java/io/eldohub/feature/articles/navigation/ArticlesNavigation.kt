@@ -23,13 +23,16 @@ fun NavGraphBuilder.articlesFeatureNavGraph(
     ) {
         BackHandler(onBack = {})
         val viewModel: ArticleViewModel = koinViewModel()
-
         ArticleListScreen(
             viewModel = viewModel,
             onArticleClick = { articleId ->
                 navController.navigate("$ARTICLE_DETAIL_ROUTE/$articleId")
+            },
+            onCreateClick = {
+                navController.navigate("articles/create_route")
             }
         )
+
     }
 
     // ✅ Detail Screen

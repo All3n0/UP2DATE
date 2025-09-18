@@ -15,6 +15,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import io.eldohub.feature.articles.screen.main.ArticleListScreen
+import io.eldohub.feature.articles.screen.main.CreateArticleScreen
 import io.eldohub.feature.articles.screen.viewmodels.ArticleViewModel
 import io.eldohub.feature.favourites.screen.main.FavouritesScreen
 import io.eldohub.feature.newsfeed.screen.main.NewsFeedScreen
@@ -23,6 +24,8 @@ import org.koin.androidx.compose.koinViewModel
 
 private const val TOTAL_TABS = 3
 const val NEWS_FEED_NAVIGATION = "newsfeed/newsfeed_navigation"
+const val ARTICLE_DETAIL_ROUTE = "articles/detail_route/{articleId}"
+const val CREATE_ARTICLE_ROUTE = "articles/create_route"
 
 @OptIn(ExperimentalPagerApi::class)
 fun NavGraphBuilder.newsFeedFeatureNavGraph(
@@ -68,6 +71,9 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
                             viewModel = articleViewModel,
                             onArticleClick = { articleId ->
                                 navController.navigate("articles/detail_route/$articleId")
+                            },
+                            onCreateClick = {
+                                navController.navigate(CREATE_ARTICLE_ROUTE)
                             }
                         )
                     }
@@ -75,4 +81,26 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
             }
         }
     }
+
+    // ✅ Create Article destination
+    composable(route = CREATE_ARTICLE_ROUTE) {
+        val articleViewModel: ArticleViewModel = koinViewModel()
+        CreateArticleScreen(
+            viewModel = articleViewModel,
+            onArticleSaved = {
+                navController.popBackStack() // return to list after saving
+            }
+        )
+    }
+
+    // (Optional) detail route can be added if not already
+    /*
+    composable(
+        route = ARTICLE_DETAIL_ROUTE,
+        arguments = listOf(navArgument("articleId") { type = NavType.LongType })
+    ) {
+        val articleId = it.arguments?.getLong("articleId") ?: return@composable
+        ArticleDetailScreen(articleId = articleId) // implement this
+    }
+    */
 }
