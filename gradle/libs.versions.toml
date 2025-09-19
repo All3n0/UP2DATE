@@ -40,6 +40,7 @@ adapters = "3.2.0-alpha11"
 kspDevTools = "2.2.0-2.0.2"
 engageCore = "1.5.9"
 tvMaterial = "1.0.1"
+foundation = "1.9.1"
 
 
 [libraries]
@@ -100,6 +101,7 @@ androidx-adapters = { group = "androidx.databinding", name = "adapters", version
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomDatabase" }
 engage-core = { group = "com.google.android.engage", name = "engage-core", version.ref = "engageCore" }
 androidx-tv-material = { group = "androidx.tv", name = "tv-material", version.ref = "tvMaterial" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 
 
 [plugins]

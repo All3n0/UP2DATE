@@ -1,12 +1,12 @@
 package io.eldohub.feature.articles.navigation
 
+import ArticleListScreen
 import androidx.activity.compose.BackHandler
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import io.eldohub.core.ui.extensions.fromRightComposable
-import io.eldohub.feature.articles.screen.main.ArticleListScreen
 import io.eldohub.feature.articles.screen.main.ArticleDetailScreen
 import io.eldohub.feature.articles.screen.viewmodels.ArticleViewModel
 import org.koin.androidx.compose.koinViewModel

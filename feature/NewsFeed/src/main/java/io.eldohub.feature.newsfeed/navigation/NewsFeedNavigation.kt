@@ -1,5 +1,6 @@
 package io.eldohub.feature.newsfeed.navigation
 
+import ArticleListScreen
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -17,7 +18,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import io.eldohub.feature.articles.screen.main.ArticleDetailScreen
-import io.eldohub.feature.articles.screen.main.ArticleListScreen
 import io.eldohub.feature.articles.screen.main.CreateArticleScreen
 import io.eldohub.feature.articles.screen.viewmodels.ArticleViewModel
 import io.eldohub.feature.favourites.screen.main.FavouritesScreen
