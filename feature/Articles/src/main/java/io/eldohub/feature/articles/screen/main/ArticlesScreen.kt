@@ -11,8 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import io.eldohub.core.ui.theme.primary100
 import io.eldohub.domain.article.model.Article
 import io.eldohub.feature.articles.screen.viewmodels.ArticleViewModel
 
@@ -28,9 +36,33 @@ fun ArticleListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("My Articles1") }
+                title = {
+                    Box(
+                        modifier = Modifier.drawBehind {
+                            val strokeWidth = 4.dp.toPx() // thickness of underline
+                            val yOffset = size.height + 6.dp.toPx() // push underline lower
+                            drawLine(
+                                color = primary100, // your custom underline color
+                                start = Offset(0f, yOffset),
+                                end = Offset(size.width, yOffset),
+                                strokeWidth = strokeWidth
+                            )
+                        }
+                    ) {
+                        Text(
+                            text = "My Articles",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                }
             )
         }
+
+
+
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -43,7 +75,7 @@ fun ArticleListScreen(
                 onClick = onCreateClick,
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
+                    containerColor = primary100,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {

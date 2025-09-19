@@ -45,11 +45,16 @@ class ArticleViewModel(
         }
     }
 
-    fun deleteArticle(article: Article) {
+    fun deleteArticle(articleId: Long) {
         viewModelScope.launch {
-            repository.deleteArticle(article)
+            val article = repository.getArticleById(articleId)
+            if (article != null) {
+                repository.deleteArticle(article)
+                _selectedArticle.value = null
+            }
         }
     }
+
 
     /**
      * Helper for screens: create an Article from simple fields.
@@ -74,4 +79,25 @@ class ArticleViewModel(
             repository.insertArticle(article)
         }
     }
+    fun markAsComplete(articleId: Long) {
+        viewModelScope.launch {
+            val article = repository.getArticleById(articleId)
+            if (article != null && !article.isCompleted) {
+                val updatedArticle = article.copy(
+                    isCompleted = true,
+                    dateCompleted = Date()
+                )
+                repository.updateArticle(updatedArticle)
+                _selectedArticle.value = updatedArticle // update current state
+            }
+        }
+    }
+    fun saveArticleEdits(article: Article) {
+        viewModelScope.launch {
+            repository.updateArticle(article)
+            _selectedArticle.value = article // immediately update the flow
+        }
+    }
+
+
 }

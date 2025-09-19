@@ -10,10 +10,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import io.eldohub.feature.articles.screen.main.ArticleDetailScreen
 import io.eldohub.feature.articles.screen.main.ArticleListScreen
 import io.eldohub.feature.articles.screen.main.CreateArticleScreen
 import io.eldohub.feature.articles.screen.viewmodels.ArticleViewModel
@@ -94,13 +97,19 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
     }
 
     // (Optional) detail route can be added if not already
-    /*
     composable(
         route = ARTICLE_DETAIL_ROUTE,
         arguments = listOf(navArgument("articleId") { type = NavType.LongType })
-    ) {
-        val articleId = it.arguments?.getLong("articleId") ?: return@composable
-        ArticleDetailScreen(articleId = articleId) // implement this
+    ) { backStackEntry ->
+        val articleId = backStackEntry.arguments?.getLong("articleId") ?: return@composable
+        val articleViewModel: ArticleViewModel = koinViewModel()
+        ArticleDetailScreen(
+            viewModel = articleViewModel,
+            articleId = articleId,
+            onBack = { navController.popBackStack() },
+//            onEdit = { id ->
+//                navController.navigate("articles/edit_route/$id")
+//            }
+        )
     }
-    */
 }

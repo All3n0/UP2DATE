@@ -48,7 +48,10 @@ fun NavGraphBuilder.articlesFeatureNavGraph(
         ArticleDetailScreen(
             viewModel = viewModel,
             articleId = articleId,
-            onBack = { navController.popBackStack() }
+            onBack = { navController.popBackStack() },
+//            onEdit = { id ->
+//                navController.navigate("articles/edit_route/$id")
+//            }
         )
     }
 }

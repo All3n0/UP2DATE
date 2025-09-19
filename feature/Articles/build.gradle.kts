@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.test)
     implementation(libs.koin.junit)
+    implementation(libs.androidx.tv.material)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
