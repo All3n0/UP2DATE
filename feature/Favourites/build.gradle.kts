@@ -2,6 +2,10 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    // Add this if you’re using kapt OR ksp for Room
+    id("kotlin-kapt")
+    // or: id("com.google.devtools.ksp")
 }
 
 android {
@@ -34,9 +38,9 @@ android {
 }
 
 dependencies {
-
     implementation(project(":core:ui"))
     implementation(project(":domain"))
+    implementation(project(":data"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -60,6 +64,12 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.test)
     implementation(libs.koin.junit)
+
+    // ✅ Room dependencies
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
+    // or if using KSP: ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

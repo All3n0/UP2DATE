@@ -11,12 +11,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,9 +32,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
+import io.eldohub.data.favorites.entity.FavoriteEntity
 import io.eldohub.domain.newsFeed.model.Article
-
+import io.eldohub.feature.favourites.screen.viewmodels.FavoriteViewModel
 // Define the color scheme
 val primary100 = Color(0xFFFFCDD2) // Light red
 val primaryDark = Color(0xFFD32F2F) // Darker red for contrast
@@ -47,7 +52,10 @@ fun NewsDetailsScreen(
     onBack: () -> Unit
 ) {
     Log.d("NewsDetailsScreen", "Recomposed with article: $article")
+    val favViewModel: FavoriteViewModel= viewModel()
+    val favorites by favViewModel.favorites.collectAsState()
 
+    val isFavorite = favorites.any { it.url == article?.url }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -79,13 +87,29 @@ fun NewsDetailsScreen(
                             tint = black
                         )
                     }
-                    IconButton(onClick = { /* Handle bookmark */ }) {
+
+                    IconButton(onClick = {
+                        article?.let {
+                            val favoriteEntity = FavoriteEntity(
+                                title = it.title,
+                                description = it.description,
+                                content = it.content,
+                                author = it.author,
+                                publishedAt = it.publishedAt,
+                                url = it.url,
+                                urlToImage = it.urlToImage,
+                                sourceName = it.source?.name
+                            )
+                            favViewModel.toggleFavorite(favoriteEntity)
+                        }
+                    }) {
                         Icon(
-                            imageVector = Icons.Outlined.FavoriteBorder,
-                            contentDescription = "Bookmark",
-                            tint = black
+                            imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                            contentDescription = if (isFavorite) "Remove from favourites" else "Add to favourites",
+                            tint = if (isFavorite) Color.Red else Color.Black
                         )
                     }
+
                 }
             )
         },

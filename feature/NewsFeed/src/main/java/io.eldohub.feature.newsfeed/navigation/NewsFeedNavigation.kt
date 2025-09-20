@@ -26,6 +26,7 @@ import io.eldohub.feature.articles.screen.main.ArticleDetailScreen
 import io.eldohub.feature.articles.screen.main.CreateArticleScreen
 import io.eldohub.feature.articles.screen.viewmodels.ArticleViewModel
 import io.eldohub.feature.favourites.screen.main.FavouritesScreen
+import io.eldohub.feature.favourites.screen.viewmodels.FavoriteViewModel
 import io.eldohub.feature.newsfeed.screen.main.NewsDetailsScreen
 import io.eldohub.feature.newsfeed.screen.main.NewsFeedScreen
 import io.eldohub.feature.newsfeed.screen.viewmodels.NewsDetailsViewModel
@@ -83,8 +84,10 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
                             navController.navigate(NEWS_DETAILS_ROUTE)
                         })
                     }
-                    1 -> FavouritesScreen()
-                    2 -> {
+                    1 -> {
+                        val favViewModel: FavoriteViewModel = koinViewModel()
+                        FavouritesScreen(viewModel = favViewModel)
+                    }                    2 -> {
                         val articleViewModel: ArticleViewModel = koinViewModel()
                         ArticleListScreen(
                             viewModel = articleViewModel,
