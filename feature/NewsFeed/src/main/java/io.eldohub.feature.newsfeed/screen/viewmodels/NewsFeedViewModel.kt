@@ -50,3 +50,11 @@ class NewsFeedViewModel(
         }
     }
 }
+class NewsDetailsViewModel : ViewModel() {
+    private val _article = MutableStateFlow<Article?>(null)
+    val article: StateFlow<Article?> = _article
+
+    fun setArticle(article: Article) {
+        _article.value = article
+    }
+}

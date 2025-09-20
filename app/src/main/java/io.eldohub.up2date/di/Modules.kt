@@ -21,6 +21,7 @@ import io.eldohub.domain.common.InternetService
 import io.eldohub.domain.newsFeed.repository.FetchNewsRepository
 import io.eldohub.domain.newsFeed.usecase.FetchNewsUseCase
 import io.eldohub.feature.articles.screen.viewmodels.ArticleViewModel
+import io.eldohub.feature.newsfeed.screen.viewmodels.NewsDetailsViewModel
 import io.eldohub.feature.newsfeed.screen.viewmodels.NewsFeedViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -59,4 +60,5 @@ val DomainModule = module {
     // ViewModel
     viewModel { ArticleViewModel(get()) }
     viewModel { NewsFeedViewModel(get()) }
+    viewModel { NewsDetailsViewModel() } // 👈 Added this
 }
