@@ -80,13 +80,37 @@ fun NewsDetailsScreen(
                     containerColor = primary100
                 ),
                 actions = {
-                    IconButton(onClick = { /* Handle share */ }) {
+                    val context = LocalContext.current
+
+                    IconButton(onClick = {
+                        article?.let {
+                            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(
+                                    Intent.EXTRA_SUBJECT,
+                                    it.title ?: "Check out this article"
+                                )
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    "${it.title}\n\nRead more here: ${it.url ?: ""}"
+                                )
+                            }
+                            try {
+                                context.startActivity(
+                                    Intent.createChooser(shareIntent, "Share article via")
+                                )
+                            } catch (e: Exception) {
+                                Log.e("NewsDetailsScreen", "Error while sharing", e)
+                            }
+                        }
+                    }) {
                         Icon(
                             imageVector = Icons.Outlined.Share,
                             contentDescription = "Share",
                             tint = black
                         )
                     }
+
 
                     IconButton(onClick = {
                         article?.let {

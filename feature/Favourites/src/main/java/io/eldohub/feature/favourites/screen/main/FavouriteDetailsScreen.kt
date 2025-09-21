@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import io.eldohub.core.ui.theme.black
 import io.eldohub.data.favorites.entity.FavoriteEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,9 +44,37 @@ fun FavouriteDetailsScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* share later */ }) {
-                        Icon(Icons.Outlined.Share, contentDescription = "Share", tint = Color.Black)
+                    val context = LocalContext.current
+
+                    IconButton(onClick = {
+                        article?.let {
+                            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(
+                                    Intent.EXTRA_SUBJECT,
+                                    it.title ?: "Check out this article"
+                                )
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    "${it.title}\n\nRead more here: ${it.url ?: ""}"
+                                )
+                            }
+                            try {
+                                context.startActivity(
+                                    Intent.createChooser(shareIntent, "Share article via")
+                                )
+                            } catch (e: Exception) {
+                                Log.e("NewsDetailsScreen", "Error while sharing", e)
+                            }
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Share,
+                            contentDescription = "Share",
+                            tint = black
+                        )
                     }
+
                     IconButton(onClick = { /* since it’s already fav, you might remove */ }) {
                         Icon(Icons.Filled.Favorite, contentDescription = "Favourite", tint = Color.Red)
                     }
