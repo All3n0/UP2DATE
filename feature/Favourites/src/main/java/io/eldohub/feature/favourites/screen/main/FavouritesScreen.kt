@@ -31,7 +31,7 @@ import io.eldohub.feature.favourites.screen.viewmodels.FavoriteViewModel
 @Composable
 fun FavouritesScreen(
     viewModel: FavoriteViewModel,
-    onArticleClick: (FavoriteEntity) -> Unit = {}
+    onArticleClick: (FavoriteEntity) -> Unit
 ) {
     val favorites by viewModel.favorites.collectAsState()
 
@@ -39,9 +39,9 @@ fun FavouritesScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .padding(bottom = 100.dp)
     ) {
         stickyHeader {
-            // Top bar with underline (like NewsFeedScreen)
             Column(
                 modifier = Modifier
                     .background(Color.White)
@@ -105,7 +105,7 @@ fun FavouritesScreen(
             items(favorites) { article ->
                 FavoriteItem(
                     article = article,
-                    onClick = { onArticleClick(article) }
+                    onClick = { onArticleClick(article) } // 👈 integrated navigation
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -121,7 +121,7 @@ fun FavoriteItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() },
+            .clickable { onClick() }, // 👈 hook into parent click
         shape = MaterialTheme.shapes.large,
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(
@@ -129,7 +129,6 @@ fun FavoriteItem(
         )
     ) {
         Column {
-            // Top image if available
             if (!article.urlToImage.isNullOrEmpty()) {
                 Image(
                     painter = rememberAsyncImagePainter(article.urlToImage),
@@ -154,7 +153,6 @@ fun FavoriteItem(
                     .fillMaxWidth()
                     .padding(12.dp)
             ) {
-                // Title
                 Text(
                     text = article.title ?: "Untitled",
                     style = MaterialTheme.typography.titleMedium,
@@ -165,7 +163,6 @@ fun FavoriteItem(
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                // Description
                 if (!article.description.isNullOrEmpty()) {
                     Text(
                         text = article.description!!,
@@ -178,12 +175,11 @@ fun FavoriteItem(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Source label
                 Box(
                     modifier = Modifier
                         .align(Alignment.Start)
                         .background(
-                            color = Color(0xFFD1C4E9), // light purple
+                            color = Color(0xFFFFCDD2),
                             shape = RoundedCornerShape(50)
                         )
                         .padding(horizontal = 12.dp, vertical = 6.dp)

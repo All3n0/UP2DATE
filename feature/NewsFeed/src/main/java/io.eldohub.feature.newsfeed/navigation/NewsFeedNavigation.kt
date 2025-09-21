@@ -18,10 +18,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import io.eldohub.domain.newsFeed.model.Article
+import io.eldohub.domain.newsFeed.model.Source
 import io.eldohub.feature.articles.screen.main.ArticleDetailScreen
 import io.eldohub.feature.articles.screen.main.CreateArticleScreen
 import io.eldohub.feature.articles.screen.viewmodels.ArticleViewModel
@@ -38,6 +39,7 @@ const val NEWS_FEED_NAVIGATION = "newsfeed/newsfeed_navigation"
 const val ARTICLE_DETAIL_ROUTE = "articles/detail_route/{articleId}"
 const val CREATE_ARTICLE_ROUTE = "articles/create_route"
 const val NEWS_DETAILS_ROUTE = "news/details"
+const val FAVOURITE_DETAILS_ROUTE = "favourites/details"
 
 @OptIn(ExperimentalPagerApi::class)
 fun NavGraphBuilder.newsFeedFeatureNavGraph(
@@ -50,6 +52,7 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
         // 👇 Get one instance of NewsDetailsViewModel tied to this NavGraph
         val newsDetailsViewModel: NewsDetailsViewModel =
             koinViewModel(viewModelStoreOwner = navBackStackEntry)
+
         BackHandler(onBack = {})
 
         Scaffold(
@@ -86,8 +89,26 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
                     }
                     1 -> {
                         val favViewModel: FavoriteViewModel = koinViewModel()
-                        FavouritesScreen(viewModel = favViewModel)
-                    }                    2 -> {
+                        FavouritesScreen(
+                            viewModel = favViewModel,
+                            onArticleClick = { fav ->
+                                // ✅ Convert FavoriteEntity -> Article
+                                val article = Article(
+                                    title = fav.title,
+                                    description = fav.description,
+                                    content = fav.content,
+                                    author = fav.author,
+                                    publishedAt = fav.publishedAt,
+                                    url = fav.url,
+                                    urlToImage = fav.urlToImage,
+                                    source = fav.sourceName?.let { Source(it) }
+                                )
+                                newsDetailsViewModel.setArticle(article)
+                                navController.navigate(FAVOURITE_DETAILS_ROUTE)
+                            }
+                        )
+                    }
+                    2 -> {
                         val articleViewModel: ArticleViewModel = koinViewModel()
                         ArticleListScreen(
                             viewModel = articleViewModel,
@@ -131,7 +152,6 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
 
     // ✅ News details route uses the SAME ViewModel
     composable(route = NEWS_DETAILS_ROUTE) { navBackStackEntry ->
-        // ✅ Use the parent route as the owner so we reuse the same instance
         val parentEntry = remember(navBackStackEntry) {
             navController.getBackStackEntry(NEWS_FEED_NAVIGATION)
         }
@@ -146,5 +166,19 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
         )
     }
 
+    // ✅ Favourite details route uses the SAME ViewModel
+    composable(route = FAVOURITE_DETAILS_ROUTE) { navBackStackEntry ->
+        val parentEntry = remember(navBackStackEntry) {
+            navController.getBackStackEntry(NEWS_FEED_NAVIGATION)
+        }
+        val newsDetailsViewModel: NewsDetailsViewModel =
+            koinViewModel(viewModelStoreOwner = parentEntry)
 
+        val article by newsDetailsViewModel.article.collectAsState()
+
+        NewsDetailsScreen(
+            article = article,
+            onBack = { navController.popBackStack() }
+        )
+    }
 }
