@@ -19,6 +19,7 @@
             <option value="$PROJECT_DIR$/feature/Articles" />
             <option value="$PROJECT_DIR$/feature/Favourites" />
             <option value="$PROJECT_DIR$/feature/NewsFeed" />
+            <option value="$PROJECT_DIR$/feature/Search" />
           </set>
         </option>
       </GradleProjectSettings>

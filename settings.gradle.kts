@@ -34,4 +34,7 @@ project(":feature:favourites").projectDir = file("feature/Favourites")
 include(":feature:articles")
 project(":feature:articles").projectDir = file("feature/Articles")
 
+include(":feature:search")
+project(":feature:search").projectDir = file("feature/Search")
+
  

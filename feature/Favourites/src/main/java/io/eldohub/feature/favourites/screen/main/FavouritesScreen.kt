@@ -35,79 +35,85 @@ fun FavouritesScreen(
 ) {
     val favorites by viewModel.favorites.collectAsState()
 
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .padding(bottom = 100.dp)
     ) {
-        stickyHeader {
-            Column(
-                modifier = Modifier
-                    .background(Color.White)
-                    .fillMaxWidth()
+        // Top header placed outside the LazyColumn
+        Column(
+            modifier = Modifier
+                .background(Color.White)
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(bottom = 8.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = null,
+                    tint = primary100,
+                    modifier = Modifier.size(24.dp)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Box(
+                    modifier = Modifier.drawBehind {
+                        val strokeWidth = 4.dp.toPx()
+                        val yOffset = size.height + 6.dp.toPx()
+                        drawLine(
+                            color = primary100,
+                            start = Offset(0f, yOffset),
+                            end = Offset(size.width, yOffset),
+                            strokeWidth = strokeWidth
+                        )
+                    }
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Favorite,
-                        contentDescription = null,
-                        tint = primary100,
-                        modifier = Modifier.size(24.dp)
+                    Text(
+                        text = "My Favourites",
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = Color.Black
                     )
+                }
+            }
 
-                    Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
+        // LazyColumn without top padding
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp) // Only horizontal padding
+                .padding(bottom = 100.dp)
+        ) {
+            if (favorites.isEmpty()) {
+                item {
                     Box(
-                        modifier = Modifier.drawBehind {
-                            val strokeWidth = 4.dp.toPx()
-                            val yOffset = size.height + 6.dp.toPx()
-                            drawLine(
-                                color = primary100,
-                                start = Offset(0f, yOffset),
-                                end = Offset(size.width, yOffset),
-                                strokeWidth = strokeWidth
-                            )
-                        }
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 100.dp),
+                        contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "My Favourites",
-                            style = MaterialTheme.typography.headlineMedium.copy(
-                                fontWeight = FontWeight.Bold
-                            ),
-                            color = Color.Black
+                            text = "No favourites yet",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.Gray
                         )
                     }
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-        }
-
-        if (favorites.isEmpty()) {
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 100.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "No favourites yet",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.Gray
+            } else {
+                items(favorites) { article ->
+                    FavoriteItem(
+                        article = article,
+                        onClick = { onArticleClick(article) }
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
-            }
-        } else {
-            items(favorites) { article ->
-                FavoriteItem(
-                    article = article,
-                    onClick = { onArticleClick(article) } // 👈 integrated navigation
-                )
-                Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }
@@ -121,7 +127,7 @@ fun FavoriteItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }, // 👈 hook into parent click
+            .clickable { onClick() },
         shape = MaterialTheme.shapes.large,
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(

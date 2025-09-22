@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,7 +17,8 @@ import io.eldohub.core.ui.theme.*
 enum class NewsFeedPages(val icon: ImageVector, val label: String) {
     NEWS_FEED(Icons.Default.Home, "Home"),
     FAVOURITES(Icons.Default.Favorite, "Favourites"),
-    ARTICLES(Icons.Default.Create, "Articles")
+    ARTICLES(Icons.Default.Create, "Articles"),
+    SEARCH(Icons.Default.Search, label = "Search")
 }
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)

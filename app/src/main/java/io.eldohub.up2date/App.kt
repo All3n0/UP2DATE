@@ -4,6 +4,7 @@ import ArticleFeatureModule
 import NewsFeedFeatureModule
 import android.app.Application
 import io.eldohub.feature.favourites.di.FavouritesFeatureModule
+import io.eldohub.feature.search.di.SearchFeatureModule
 import io.eldohub.up2date.di.DataModule
 import io.eldohub.up2date.di.DomainModule
 import org.koin.android.ext.koin.androidContext
@@ -21,7 +22,8 @@ class App : Application() {
                 DomainModule,
                 NewsFeedFeatureModule,
                 ArticleFeatureModule,
-                FavouritesFeatureModule
+                FavouritesFeatureModule,
+                SearchFeatureModule
             )
         }
     }

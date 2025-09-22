@@ -37,72 +37,75 @@ fun NewsFeedScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
     ) {
-        stickyHeader {
-            // Top bar with underline like ArticleListScreen
-            Column(
-                modifier = Modifier
-                    .background(Color.White)
-                    .fillMaxWidth()
+        // Top header placed outside the LazyColumn
+        Column(
+            modifier = Modifier
+                .background(Color.White)
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(bottom = 8.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    tint = primary100,
+                    modifier = Modifier.size(24.dp)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Box(
+                    modifier = Modifier
+                        .drawBehind {
+                            val strokeWidth = 4.dp.toPx()
+                            val yOffset = size.height + 6.dp.toPx()
+                            drawLine(
+                                color = primary100,
+                                start = Offset(0f, yOffset),
+                                end = Offset(size.width, yOffset),
+                                strokeWidth = strokeWidth
+                            )
+                        }
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = null,
-                        tint = primary100,
-                        modifier = Modifier.size(24.dp)
+                    Text(
+                        text = "Top Headlines",
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = Color.Black
                     )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Box(
-                        modifier = Modifier
-                            .drawBehind {
-                                val strokeWidth = 4.dp.toPx()
-                                val yOffset = size.height + 6.dp.toPx()
-                                drawLine(
-                                    color = primary100,
-                                    start = Offset(0f, yOffset),
-                                    end = Offset(size.width, yOffset),
-                                    strokeWidth = strokeWidth
-                                )
-                            }
-                    ) {
-                        Text(
-                            text = "Top Headlines",
-                            style = MaterialTheme.typography.headlineMedium.copy(
-                                fontWeight = FontWeight.Bold
-                            ),
-                            color = Color.Black
-                        )
-                    }
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
             }
         }
 
-        // ✅ Content
-        when (val state = uiState) {
-            is NewsFeedUiState.Loading -> item { Loading() }
-            is NewsFeedUiState.Success -> {
-                items(state.articles) { article ->
-                    NewsItem(article) { onClick(article) }
-                    Spacer(modifier = Modifier.height(8.dp))
+        // LazyColumn without top padding
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp) // Only horizontal padding
+        ) {
+            // ✅ Content
+            when (val state = uiState) {
+                is NewsFeedUiState.Loading -> item { Loading() }
+                is NewsFeedUiState.Success -> {
+                    items(state.articles) { article ->
+                        NewsItem(article) { onClick(article) }
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
                 }
-            }
-            is NewsFeedUiState.Error -> item {
-                ErrorView(
-                    message = state.message,
-                    onRetry = viewModel::fetchTopHeadlines
-                )
+                is NewsFeedUiState.Error -> item {
+                    ErrorView(
+                        message = state.message,
+                        onRetry = viewModel::fetchTopHeadlines
+                    )
+                }
             }
         }
     }

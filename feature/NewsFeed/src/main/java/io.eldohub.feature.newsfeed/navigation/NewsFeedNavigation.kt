@@ -31,10 +31,12 @@ import io.eldohub.feature.favourites.screen.viewmodels.FavoriteViewModel
 import io.eldohub.feature.newsfeed.screen.main.NewsDetailsScreen
 import io.eldohub.feature.newsfeed.screen.main.NewsFeedScreen
 import io.eldohub.feature.newsfeed.screen.viewmodels.NewsDetailsViewModel
+import io.eldohub.feature.search.screen.main.SearchScreen
+import io.eldohub.feature.search.viewmodel.SearchViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-private const val TOTAL_TABS = 3
+private const val TOTAL_TABS = 4
 const val NEWS_FEED_NAVIGATION = "newsfeed/newsfeed_navigation"
 const val ARTICLE_DETAIL_ROUTE = "articles/detail_route/{articleId}"
 const val CREATE_ARTICLE_ROUTE = "articles/create_route"
@@ -66,6 +68,7 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
                             NewsFeedPages.NEWS_FEED -> pagerState.scrollToPage(0)
                             NewsFeedPages.FAVOURITES -> pagerState.scrollToPage(1)
                             NewsFeedPages.ARTICLES -> pagerState.scrollToPage(2)
+                            NewsFeedPages.SEARCH -> pagerState.scrollToPage(3)
                         }
                     }
                 }
@@ -117,6 +120,16 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
                             },
                             onCreateClick = {
                                 navController.navigate(CREATE_ARTICLE_ROUTE)
+                            }
+                        )
+                    }
+                    3 -> {
+                        val searchViewModel: SearchViewModel = koinViewModel()
+                        SearchScreen(
+                            viewModel = searchViewModel,
+                            onArticleClick = { article ->
+                                newsDetailsViewModel.setArticle(article)
+                                navController.navigate(NEWS_DETAILS_ROUTE)
                             }
                         )
                     }
