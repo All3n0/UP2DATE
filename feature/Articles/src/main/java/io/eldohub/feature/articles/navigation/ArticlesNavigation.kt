@@ -18,10 +18,8 @@ fun NavGraphBuilder.articlesFeatureNavGraph(
     navController: NavController
 ) {
     // ✅ List Screen
-    fromRightComposable(
-        route = ARTICLES_ROUTE
-    ) {
-        BackHandler(onBack = {})
+    fromRightComposable(route = ARTICLES_ROUTE) {
+        BackHandler(onBack = {}) // prevent exiting with back
         val viewModel: ArticleViewModel = koinViewModel()
         ArticleListScreen(
             viewModel = viewModel,
@@ -32,7 +30,6 @@ fun NavGraphBuilder.articlesFeatureNavGraph(
                 navController.navigate("articles/create_route")
             }
         )
-
     }
 
     // ✅ Detail Screen
@@ -48,10 +45,7 @@ fun NavGraphBuilder.articlesFeatureNavGraph(
         ArticleDetailScreen(
             viewModel = viewModel,
             articleId = articleId,
-            onBack = { navController.popBackStack() },
-//            onEdit = { id ->
-//                navController.navigate("articles/edit_route/$id")
-//            }
+            onBack = { navController.popBackStack() }
         )
     }
 }

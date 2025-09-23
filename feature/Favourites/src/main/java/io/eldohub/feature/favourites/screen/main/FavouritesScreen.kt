@@ -48,7 +48,7 @@ fun FavouritesScreen(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp, top = 8.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Favorite,

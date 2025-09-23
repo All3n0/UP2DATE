@@ -4,6 +4,9 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -92,9 +95,42 @@ fun ArticleDetailScreen(
                     IconButton(onClick = onBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
+                },
+                actions = {
+                    // ✏️ Edit/Save toggle
+                    IconButton(onClick = {
+                        if (isEditing) {
+                            val completionDate = if (isCompleted && completionDateText.isNotBlank()) {
+                                try { dateFormat.parse(completionDateText) } catch (e: Exception) { null }
+                            } else null
+
+                            val updatedArticle = article?.copy(
+                                title = title,
+                                content = content,
+                                isCompleted = isCompleted,
+                                dateCompleted = completionDate
+                            )
+                            updatedArticle?.let { viewModel.saveArticleEdits(it) }
+                        }
+                        isEditing = !isEditing
+                    }) {
+                        Icon(
+                            imageVector = if (isEditing) Icons.Default.Check else Icons.Default.Edit,
+                            contentDescription = if (isEditing) "Save" else "Edit"
+                        )
+                    }
+
+                    // 🗑 Delete
+                    IconButton(onClick = { showDeleteDialog = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete"
+                        )
+                    }
                 }
             )
         }
+
     ) { padding ->
         article?.let { art ->
             Column(
@@ -186,62 +222,62 @@ fun ArticleDetailScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    // Save/Edit button
-                    Button(
-                        onClick = {
-                            if (isEditing) {
-                                val completionDate = if (isCompleted && completionDateText.isNotBlank()) {
-                                    try { dateFormat.parse(completionDateText) } catch (e: Exception) { null }
-                                } else null
-
-                                val updatedArticle = art.copy(
-                                    title = title,
-                                    content = content,
-                                    isCompleted = isCompleted,
-                                    dateCompleted = completionDate
-                                )
-                                viewModel.saveArticleEdits(updatedArticle)
-
-                                // Immediately update UI
-                                title = updatedArticle.title
-                                content = updatedArticle.content
-                                isCompleted = updatedArticle.isCompleted
-                                completionDateText = updatedArticle.dateCompleted?.let { dateFormat.format(it) } ?: ""
-                            }
-                            isEditing = !isEditing
-                        },
-                        enabled = !isCompleted || isCompletionDateValid,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = primary100,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
-                        )
-                    ) {
-                        Text(if (isEditing) "Save" else "Edit")
-                    }
-
-                    // Mark Complete button
+//                Row(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.SpaceEvenly
+//                ) {
+//                    // Save/Edit button
 //                    Button(
-//                        enabled = !art.isCompleted,
-//                        onClick = { viewModel.markAsComplete(art.id) }
+//                        onClick = {
+//                            if (isEditing) {
+//                                val completionDate = if (isCompleted && completionDateText.isNotBlank()) {
+//                                    try { dateFormat.parse(completionDateText) } catch (e: Exception) { null }
+//                                } else null
+//
+//                                val updatedArticle = art.copy(
+//                                    title = title,
+//                                    content = content,
+//                                    isCompleted = isCompleted,
+//                                    dateCompleted = completionDate
+//                                )
+//                                viewModel.saveArticleEdits(updatedArticle)
+//
+//                                // Immediately update UI
+//                                title = updatedArticle.title
+//                                content = updatedArticle.content
+//                                isCompleted = updatedArticle.isCompleted
+//                                completionDateText = updatedArticle.dateCompleted?.let { dateFormat.format(it) } ?: ""
+//                            }
+//                            isEditing = !isEditing
+//                        },
+//                        enabled = !isCompleted || isCompletionDateValid,
+//                        colors = ButtonDefaults.buttonColors(
+//                            containerColor = primary100,
+//                            contentColor = MaterialTheme.colorScheme.onPrimary
+//                        )
 //                    ) {
-//                        Text("Mark Complete")
+//                        Text(if (isEditing) "Save" else "Edit")
 //                    }
-
-                    // Delete button
-                    OutlinedButton(
-                        onClick = { showDeleteDialog = true },
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = Color.Black
-                        ),
-                        border = BorderStroke(1.dp, Color.Black)
-                    ) {
-                        Text("Delete")
-                    }
-                }
+//
+//                    // Mark Complete button
+////                    Button(
+////                        enabled = !art.isCompleted,
+////                        onClick = { viewModel.markAsComplete(art.id) }
+////                    ) {
+////                        Text("Mark Complete")
+////                    }
+//
+//                    // Delete button
+//                    OutlinedButton(
+//                        onClick = { showDeleteDialog = true },
+//                        colors = ButtonDefaults.outlinedButtonColors(
+//                            contentColor = Color.Black
+//                        ),
+//                        border = BorderStroke(1.dp, Color.Black)
+//                    ) {
+//                        Text("Delete")
+//                    }
+//                }
 
                 // Delete confirmation dialog
                 if (showDeleteDialog) {

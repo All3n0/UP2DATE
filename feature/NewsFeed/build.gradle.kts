@@ -43,7 +43,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.material3)
-
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.36.0")
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.compose.accompanist)
     implementation(libs.accompanist.pager)

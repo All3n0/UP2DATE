@@ -1,13 +1,16 @@
 package io.eldohub.feature.newsfeed.screen.main
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,17 +21,18 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import io.eldohub.core.ui.theme.primary100
-import io.eldohub.core.ui.theme.white
 import io.eldohub.domain.newsFeed.model.Article
 import io.eldohub.feature.newsfeed.screen.viewmodels.NewsFeedUiState
 import io.eldohub.feature.newsfeed.screen.viewmodels.NewsFeedViewModel
-import okhttp3.internal.wait
 import org.koin.androidx.compose.getViewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun NewsFeedScreen(
@@ -36,22 +40,20 @@ fun NewsFeedScreen(
     onClick: (Article) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        // Top header placed outside the LazyColumn
+    Column(modifier = Modifier.fillMaxSize()) {
+
+        // 📰 Header
         Column(
             modifier = Modifier
                 .background(Color.White)
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(bottom = 8.dp)
-            ) {
+            Spacer(modifier = Modifier.height(12.dp)) // padding above the title
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = null,
@@ -62,17 +64,16 @@ fun NewsFeedScreen(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Box(
-                    modifier = Modifier
-                        .drawBehind {
-                            val strokeWidth = 4.dp.toPx()
-                            val yOffset = size.height + 6.dp.toPx()
-                            drawLine(
-                                color = primary100,
-                                start = Offset(0f, yOffset),
-                                end = Offset(size.width, yOffset),
-                                strokeWidth = strokeWidth
-                            )
-                        }
+                    modifier = Modifier.drawBehind {
+                        val strokeWidth = 4.dp.toPx()
+                        val yOffset = size.height + 6.dp.toPx()
+                        drawLine(
+                            color = primary100,
+                            start = Offset(0f, yOffset),
+                            end = Offset(size.width, yOffset),
+                            strokeWidth = strokeWidth
+                        )
+                    }
                 ) {
                     Text(
                         text = "Top Headlines",
@@ -83,34 +84,89 @@ fun NewsFeedScreen(
                     )
                 }
             }
+
+            // 🔍 Search bar UNDER the title
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                label = { Text("Search in headlines") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp), // spacing between title & search bar
+                singleLine = true,
+                trailingIcon = {
+                    if (searchQuery.isNotEmpty()) {
+                        IconButton(onClick = { searchQuery = "" }) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Clear search"
+                            )
+                        }
+                    }
+                },
+                shape = RoundedCornerShape(16.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = primary100,
+                    unfocusedBorderColor = primary100
+                )
+            )
         }
 
-        // LazyColumn without top padding
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp) // Only horizontal padding
+
+        // 🔄 Pull to refresh
+        val isRefreshing = uiState is NewsFeedUiState.Loading
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing),
+            onRefresh = { viewModel.fetchTopHeadlines() },
+            modifier = Modifier.fillMaxSize()
         ) {
-            // ✅ Content
-            when (val state = uiState) {
-                is NewsFeedUiState.Loading -> item { Loading() }
-                is NewsFeedUiState.Success -> {
-                    items(state.articles) { article ->
-                        NewsItem(article) { onClick(article) }
-                        Spacer(modifier = Modifier.height(8.dp))
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                contentPadding = PaddingValues(vertical = 12.dp), // spacing top & bottom
+                verticalArrangement = Arrangement.spacedBy(16.dp) // spacing between items
+            ) {
+                when (val state = uiState) {
+                    is NewsFeedUiState.Loading -> item { Loading() }
+                    is NewsFeedUiState.Success -> {
+                        // Filter by local search
+                        val filteredArticles = if (searchQuery.isBlank()) {
+                            state.articles
+                        } else {
+                            state.articles.filter {
+                                it.title?.contains(searchQuery, ignoreCase = true) == true ||
+                                        it.description?.contains(searchQuery, ignoreCase = true) == true
+                            }
+                        }
+
+                        if (filteredArticles.isEmpty()) {
+                            item {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text("No matching results", color = Color.Gray)
+                                }
+                            }
+                        } else {
+                            items(filteredArticles) { article ->
+                                NewsItem(article, onClick = { onClick(article) })
+                            }
+                        }
                     }
-                }
-                is NewsFeedUiState.Error -> item {
-                    ErrorView(
-                        message = state.message,
-                        onRetry = viewModel::fetchTopHeadlines
-                    )
+
+                    is NewsFeedUiState.Error -> item {
+                        ErrorView(
+                            message = state.message,
+                            onRetry = viewModel::fetchTopHeadlines
+                        )
+                    }
                 }
             }
         }
     }
 }
-
 
 @Composable
 private fun Loading() {
@@ -118,7 +174,7 @@ private fun Loading() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(color = primary100)
     }
 }
 
@@ -137,12 +193,28 @@ private fun ErrorView(message: String, onRetry: () -> Unit) {
         }
     }
 }
+
 @Composable
 fun NewsItem(article: Article, onClick: () -> Unit = {}) {
+    val context = LocalContext.current
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = {
+                    // 📤 Share intent on long press
+                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_SUBJECT, article.title)
+                        putExtra(Intent.EXTRA_TEXT, article.url ?: "")
+                    }
+                    context.startActivity(
+                        Intent.createChooser(shareIntent, "Share via")
+                    )
+                }
+            ),
         shape = MaterialTheme.shapes.large,
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(
@@ -150,7 +222,7 @@ fun NewsItem(article: Article, onClick: () -> Unit = {}) {
         )
     ) {
         Column {
-            // Top-rounded image
+            // Article image
             if (!article.urlToImage.isNullOrEmpty()) {
                 Image(
                     painter = rememberAsyncImagePainter(article.urlToImage),
@@ -162,9 +234,7 @@ fun NewsItem(article: Article, onClick: () -> Unit = {}) {
                         .clip(
                             RoundedCornerShape(
                                 topStart = 16.dp,
-                                topEnd = 16.dp,
-                                bottomStart = 0.dp,
-                                bottomEnd = 0.dp
+                                topEnd = 16.dp
                             )
                         )
                 )
@@ -175,7 +245,6 @@ fun NewsItem(article: Article, onClick: () -> Unit = {}) {
                     .fillMaxWidth()
                     .padding(12.dp)
             ) {
-                // Title
                 Text(
                     text = article.title ?: "Untitled",
                     style = MaterialTheme.typography.titleMedium,
@@ -186,11 +255,9 @@ fun NewsItem(article: Article, onClick: () -> Unit = {}) {
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                // Description
-                val description = article.description
-                if (!description.isNullOrEmpty()) {
+                article.description?.let {
                     Text(
-                        text = description,
+                        text = it,
                         style = MaterialTheme.typography.bodyMedium,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
@@ -200,10 +267,9 @@ fun NewsItem(article: Article, onClick: () -> Unit = {}) {
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Source inside rounded container, aligned properly
                 Box(
                     modifier = Modifier
-                        .align(Alignment.Start) // align start so it doesn't stretch
+                        .align(Alignment.Start)
                         .background(
                             color = Color(0xFFFFCDD2), // light red
                             shape = RoundedCornerShape(50)
@@ -213,11 +279,11 @@ fun NewsItem(article: Article, onClick: () -> Unit = {}) {
                     Text(
                         text = article.source?.name ?: "Unknown Source",
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color(0xFFB71C1C)
+                        color = Color(0xFFB71C1C),
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
         }
     }
 }
-

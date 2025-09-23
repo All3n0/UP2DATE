@@ -1,4 +1,3 @@
-// navigation/NewsFeedNavigation.kt
 package io.eldohub.feature.newsfeed.navigation
 
 import ArticleListScreen
@@ -16,11 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
-import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import io.eldohub.core.ui.extensions.fromBottomComposable
+import io.eldohub.core.ui.extensions.fromRightComposable
 import io.eldohub.domain.newsFeed.model.Article
 import io.eldohub.domain.newsFeed.model.Source
 import io.eldohub.feature.articles.screen.main.ArticleDetailScreen
@@ -29,6 +29,7 @@ import io.eldohub.feature.articles.screen.viewmodels.ArticleViewModel
 import io.eldohub.feature.favourites.screen.main.FavouritesScreen
 import io.eldohub.feature.favourites.screen.viewmodels.FavoriteViewModel
 import io.eldohub.feature.newsfeed.screen.main.NewsDetailsScreen
+import io.eldohub.feature.newsfeed.navigation.NewsFeedBottomNav
 import io.eldohub.feature.newsfeed.screen.main.NewsFeedScreen
 import io.eldohub.feature.newsfeed.screen.viewmodels.NewsDetailsViewModel
 import io.eldohub.feature.search.screen.main.SearchScreen
@@ -47,11 +48,10 @@ const val FAVOURITE_DETAILS_ROUTE = "favourites/details"
 fun NavGraphBuilder.newsFeedFeatureNavGraph(
     navController: NavController
 ) {
-    composable(route = NEWS_FEED_NAVIGATION) { navBackStackEntry ->
+    // ✅ Main tab navigation (no animation, it’s pager-based)
+    fromRightComposable(route = NEWS_FEED_NAVIGATION) { navBackStackEntry ->
         val pagerState = rememberPagerState()
         val scope = rememberCoroutineScope()
-
-        // 👇 Get one instance of NewsDetailsViewModel tied to this NavGraph
         val newsDetailsViewModel: NewsDetailsViewModel =
             koinViewModel(viewModelStoreOwner = navBackStackEntry)
 
@@ -95,7 +95,6 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
                         FavouritesScreen(
                             viewModel = favViewModel,
                             onArticleClick = { fav ->
-                                // ✅ Convert FavoriteEntity -> Article
                                 val article = Article(
                                     title = fav.title,
                                     description = fav.description,
@@ -138,8 +137,8 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
         }
     }
 
-    // ✅ Create Article destination
-    composable(route = CREATE_ARTICLE_ROUTE) {
+    // ✅ Create Article with bottom slide up
+    fromBottomComposable(route = CREATE_ARTICLE_ROUTE) {
         val articleViewModel: ArticleViewModel = koinViewModel()
         CreateArticleScreen(
             viewModel = articleViewModel,
@@ -149,12 +148,12 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
         )
     }
 
-    // ✅ Article detail route
-    composable(
+    // ✅ Article detail
+    fromRightComposable(
         route = ARTICLE_DETAIL_ROUTE,
         arguments = listOf(navArgument("articleId") { type = NavType.LongType })
     ) { backStackEntry ->
-        val articleId = backStackEntry.arguments?.getLong("articleId") ?: return@composable
+        val articleId = backStackEntry.arguments?.getLong("articleId") ?: return@fromRightComposable
         val articleViewModel: ArticleViewModel = koinViewModel()
         ArticleDetailScreen(
             viewModel = articleViewModel,
@@ -163,8 +162,8 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
         )
     }
 
-    // ✅ News details route uses the SAME ViewModel
-    composable(route = NEWS_DETAILS_ROUTE) { navBackStackEntry ->
+    // ✅ News details
+    fromRightComposable(route = NEWS_DETAILS_ROUTE) { navBackStackEntry ->
         val parentEntry = remember(navBackStackEntry) {
             navController.getBackStackEntry(NEWS_FEED_NAVIGATION)
         }
@@ -179,8 +178,8 @@ fun NavGraphBuilder.newsFeedFeatureNavGraph(
         )
     }
 
-    // ✅ Favourite details route uses the SAME ViewModel
-    composable(route = FAVOURITE_DETAILS_ROUTE) { navBackStackEntry ->
+    // ✅ Favourite details
+    fromRightComposable(route = FAVOURITE_DETAILS_ROUTE) { navBackStackEntry ->
         val parentEntry = remember(navBackStackEntry) {
             navController.getBackStackEntry(NEWS_FEED_NAVIGATION)
         }
