@@ -8,5 +8,6 @@ data class ArticleEntity(
     val content: String,
     val dateAdded: Long = System.currentTimeMillis(),
     val dateCompleted: Long? = null,
-    val isCompleted: Boolean = false
+    val isCompleted: Boolean = false,
+    val imageUri: String? = null // <-- new field for local images
 )

@@ -1,6 +1,7 @@
 package io.eldohub.feature.articles.screen.main
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -14,8 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import io.eldohub.core.ui.theme.primary100
 import io.eldohub.feature.articles.screen.viewmodels.ArticleViewModel
 import java.text.SimpleDateFormat
@@ -210,6 +213,19 @@ fun ArticleDetailScreen(
                     }
                 } else {
                     // Display article normally
+                    // Inside Column of ArticleDetailScreen
+                    art.imageUri?.let { uri ->
+                        Image(
+                            painter = rememberAsyncImagePainter(uri),
+                            contentDescription = "Article image",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(220.dp),
+                            contentScale = ContentScale.Crop
+                        )
+                        Spacer(Modifier.height(12.dp))
+                    }
+
                     Text(art.title, style = MaterialTheme.typography.headlineSmall)
                     Text(art.content, style = MaterialTheme.typography.bodyLarge)
                     if (art.isCompleted) {

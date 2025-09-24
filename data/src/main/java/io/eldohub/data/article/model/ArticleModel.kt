@@ -8,5 +8,6 @@ data class ArticleModel(
     val content: String,
     val dateAdded: Date,
     val dateCompleted: Date? = null,
-    val isCompleted: Boolean = false
+    val isCompleted: Boolean = false,
+    val imageUri: String? = null // <-- new field for local image
 )

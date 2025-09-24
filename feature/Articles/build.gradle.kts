@@ -41,6 +41,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.material3)
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.compose.material:material-icons-extended:1.7.2")
 
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.compose.accompanist)
@@ -62,6 +65,7 @@ dependencies {
     implementation(libs.koin.junit)
     implementation(libs.androidx.tv.material)
     implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.ui)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

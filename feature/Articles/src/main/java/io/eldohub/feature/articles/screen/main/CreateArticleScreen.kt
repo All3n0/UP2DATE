@@ -1,20 +1,32 @@
 package io.eldohub.feature.articles.screen.main
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import io.eldohub.core.ui.theme.primary100
 import io.eldohub.domain.article.model.Article
 import io.eldohub.feature.articles.screen.viewmodels.ArticleViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+// at the top
+import androidx.compose.ui.platform.LocalContext
+import android.provider.MediaStore
+import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,8 +39,35 @@ fun CreateArticleScreen(
     var content by remember { mutableStateOf("") }
     var isCompleted by remember { mutableStateOf(false) }
     var completionDateText by remember { mutableStateOf("") }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
 
     val dateFormat = remember { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) }
+
+    // Gallery picker
+    val pickImageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        imageUri = uri
+    }
+
+    // Camera capture
+    val context = LocalContext.current
+
+    val takePictureLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap ->
+        if (bitmap != null) {
+            val uri = Uri.parse(
+                MediaStore.Images.Media.insertImage(
+                    context.contentResolver,
+                    bitmap,
+                    "CapturedImage",
+                    null
+                )
+            )
+            imageUri = uri
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -36,10 +75,10 @@ fun CreateArticleScreen(
                 title = {
                     Box(
                         modifier = Modifier.drawBehind {
-                            val strokeWidth = 4.dp.toPx() // thickness of underline
-                            val yOffset = size.height + 6.dp.toPx() // push underline lower
+                            val strokeWidth = 4.dp.toPx()
+                            val yOffset = size.height + 6.dp.toPx()
                             drawLine(
-                                color = primary100, // your custom underline color
+                                color = primary100,
                                 start = Offset(0f, yOffset),
                                 end = Offset(size.width, yOffset),
                                 strokeWidth = strokeWidth
@@ -57,17 +96,11 @@ fun CreateArticleScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = { onBack() }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back",
-                            tint = primary100
-                        )
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = primary100)
                     }
                 }
             )
         }
-
-
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -82,15 +115,15 @@ fun CreateArticleScreen(
                 label = {
                     Text(
                         "Title",
-                        color = MaterialTheme.colorScheme.onBackground,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
                     )
                 },
-                modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = primary100,
-                    unfocusedBorderColor = primary100
-                )
+                    focusedBorderColor = Color.Red,
+                    unfocusedBorderColor = Color.Red
+                ),
+                modifier = Modifier.fillMaxWidth()
             )
 
             OutlinedTextField(
@@ -99,57 +132,47 @@ fun CreateArticleScreen(
                 label = {
                     Text(
                         "Content",
-                        color = MaterialTheme.colorScheme.onBackground,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
                     )
                 },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Red,
+                    unfocusedBorderColor = Color.Red
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = primary100,
-                    unfocusedBorderColor = primary100
-                )
+                    .height(200.dp)
             )
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    "Mark as completed?",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.Bold
-                )
-                Switch(
-                    checked = isCompleted,
-                    onCheckedChange = { isCompleted = it },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = primary100,
-                        checkedTrackColor = primary100.copy(alpha = 0.5f),
-                        uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        uncheckedTrackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
-                    )
-                )
+            // Image section with gallery + camera
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Button(
+                    onClick = { pickImageLauncher.launch("image/*") },
+                    colors = ButtonDefaults.buttonColors(containerColor = primary100)
+                ) {
+                    Icon(Icons.Default.PhotoLibrary, contentDescription = "Gallery")
+                    Spacer(Modifier.width(8.dp))
+                    Text("Pick Image", fontWeight = FontWeight.Bold)
+                }
+                OutlinedButton(
+                    onClick = { takePictureLauncher.launch(null) },
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = primary100)
+                ) {
+                    Icon(Icons.Default.CameraAlt, contentDescription = "Camera")
+                    Spacer(Modifier.width(8.dp))
+                    Text("Take Photo", fontWeight = FontWeight.Bold)
+                }
             }
 
-            if (isCompleted) {
-                OutlinedTextField(
-                    value = completionDateText,
-                    onValueChange = { completionDateText = it },
-                    label = {
-                        Text(
-                            "Completion Date (yyyy-MM-dd)",
-                            color = MaterialTheme.colorScheme.onBackground,
-                            fontWeight = FontWeight.Bold
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = primary100,
-                        unfocusedBorderColor = primary100
-                    )
+            imageUri?.let { uri ->
+                Image(
+                    painter = rememberAsyncImagePainter(uri),
+                    contentDescription = "Selected image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                    contentScale = ContentScale.Crop
                 )
             }
 
@@ -162,11 +185,7 @@ fun CreateArticleScreen(
             Button(
                 onClick = {
                     val completionDate = if (isCompleted && completionDateText.isNotBlank()) {
-                        try {
-                            dateFormat.parse(completionDateText)
-                        } catch (e: Exception) {
-                            null
-                        }
+                        try { dateFormat.parse(completionDateText) } catch (e: Exception) { null }
                     } else null
 
                     val article = Article(
@@ -175,23 +194,18 @@ fun CreateArticleScreen(
                         content = content,
                         dateAdded = Date(),
                         dateCompleted = completionDate,
-                        isCompleted = isCompleted
+                        isCompleted = isCompleted,
+                        imageUri = imageUri?.toString()
                     )
                     viewModel.addArticle(article)
                     onArticleSaved()
                 },
-                modifier = Modifier.fillMaxWidth(),
                 enabled = isFormValid,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = primary100,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = primary100)
             ) {
                 Text("Save Article", fontWeight = FontWeight.Bold)
             }
         }
-
     }
 }
-
-

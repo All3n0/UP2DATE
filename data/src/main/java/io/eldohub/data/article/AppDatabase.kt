@@ -5,7 +5,7 @@ import androidx.room.TypeConverters
 import android.content.Context
 import io.eldohub.data.article.dao.ArticleDao
 
-@Database(entities = [ArticleEntity::class], version = 1, exportSchema = false)
+@Database(entities = [ArticleEntity::class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class)   // 👈 Register your converters here
 abstract class AppDatabase : RoomDatabase() {
 

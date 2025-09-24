@@ -32,12 +32,12 @@ public class AppDatabase_Impl : AppDatabase() {
   }
 
   protected override fun createOpenDelegate(): RoomOpenDelegate {
-    val _openDelegate: RoomOpenDelegate = object : RoomOpenDelegate(1,
-        "fa2217ab24b99e919dcc8a4a99008f65", "ec53d22582c8381b15bc088f08e484be") {
+    val _openDelegate: RoomOpenDelegate = object : RoomOpenDelegate(2,
+        "55717d5514f3c2c0f493830c00ac43de", "b7b5057f8ab7b634099c94a84c7a9def") {
       public override fun createAllTables(connection: SQLiteConnection) {
-        connection.execSQL("CREATE TABLE IF NOT EXISTS `articles` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, `dateAdded` INTEGER NOT NULL, `dateCompleted` INTEGER, `isCompleted` INTEGER NOT NULL)")
+        connection.execSQL("CREATE TABLE IF NOT EXISTS `articles` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, `dateAdded` INTEGER NOT NULL, `dateCompleted` INTEGER, `isCompleted` INTEGER NOT NULL, `imageUri` TEXT)")
         connection.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)")
-        connection.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fa2217ab24b99e919dcc8a4a99008f65')")
+        connection.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '55717d5514f3c2c0f493830c00ac43de')")
       }
 
       public override fun dropAllTables(connection: SQLiteConnection) {
@@ -73,6 +73,8 @@ public class AppDatabase_Impl : AppDatabase() {
             null, TableInfo.CREATED_FROM_ENTITY))
         _columnsArticles.put("isCompleted", TableInfo.Column("isCompleted", "INTEGER", true, 0,
             null, TableInfo.CREATED_FROM_ENTITY))
+        _columnsArticles.put("imageUri", TableInfo.Column("imageUri", "TEXT", false, 0, null,
+            TableInfo.CREATED_FROM_ENTITY))
         val _foreignKeysArticles: MutableSet<TableInfo.ForeignKey> = mutableSetOf()
         val _indicesArticles: MutableSet<TableInfo.Index> = mutableSetOf()
         val _infoArticles: TableInfo = TableInfo("articles", _columnsArticles, _foreignKeysArticles,

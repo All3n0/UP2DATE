@@ -37,7 +37,7 @@ public class ArticleDao_Impl(
     this.__db = __db
     this.__insertAdapterOfArticleEntity = object : EntityInsertAdapter<ArticleEntity>() {
       protected override fun createQuery(): String =
-          "INSERT OR REPLACE INTO `articles` (`id`,`title`,`content`,`dateAdded`,`dateCompleted`,`isCompleted`) VALUES (nullif(?, 0),?,?,?,?,?)"
+          "INSERT OR REPLACE INTO `articles` (`id`,`title`,`content`,`dateAdded`,`dateCompleted`,`isCompleted`,`imageUri`) VALUES (nullif(?, 0),?,?,?,?,?,?)"
 
       protected override fun bind(statement: SQLiteStatement, entity: ArticleEntity) {
         statement.bindLong(1, entity.id)
@@ -52,6 +52,12 @@ public class ArticleDao_Impl(
         }
         val _tmp: Int = if (entity.isCompleted) 1 else 0
         statement.bindLong(6, _tmp.toLong())
+        val _tmpImageUri: String? = entity.imageUri
+        if (_tmpImageUri == null) {
+          statement.bindNull(7)
+        } else {
+          statement.bindText(7, _tmpImageUri)
+        }
       }
     }
     this.__deleteAdapterOfArticleEntity = object : EntityDeleteOrUpdateAdapter<ArticleEntity>() {
@@ -63,7 +69,7 @@ public class ArticleDao_Impl(
     }
     this.__updateAdapterOfArticleEntity = object : EntityDeleteOrUpdateAdapter<ArticleEntity>() {
       protected override fun createQuery(): String =
-          "UPDATE OR ABORT `articles` SET `id` = ?,`title` = ?,`content` = ?,`dateAdded` = ?,`dateCompleted` = ?,`isCompleted` = ? WHERE `id` = ?"
+          "UPDATE OR ABORT `articles` SET `id` = ?,`title` = ?,`content` = ?,`dateAdded` = ?,`dateCompleted` = ?,`isCompleted` = ?,`imageUri` = ? WHERE `id` = ?"
 
       protected override fun bind(statement: SQLiteStatement, entity: ArticleEntity) {
         statement.bindLong(1, entity.id)
@@ -78,7 +84,13 @@ public class ArticleDao_Impl(
         }
         val _tmp: Int = if (entity.isCompleted) 1 else 0
         statement.bindLong(6, _tmp.toLong())
-        statement.bindLong(7, entity.id)
+        val _tmpImageUri: String? = entity.imageUri
+        if (_tmpImageUri == null) {
+          statement.bindNull(7)
+        } else {
+          statement.bindText(7, _tmpImageUri)
+        }
+        statement.bindLong(8, entity.id)
       }
     }
   }
@@ -110,6 +122,7 @@ public class ArticleDao_Impl(
         val _columnIndexOfDateAdded: Int = getColumnIndexOrThrow(_stmt, "dateAdded")
         val _columnIndexOfDateCompleted: Int = getColumnIndexOrThrow(_stmt, "dateCompleted")
         val _columnIndexOfIsCompleted: Int = getColumnIndexOrThrow(_stmt, "isCompleted")
+        val _columnIndexOfImageUri: Int = getColumnIndexOrThrow(_stmt, "imageUri")
         val _result: MutableList<ArticleEntity> = mutableListOf()
         while (_stmt.step()) {
           val _item: ArticleEntity
@@ -131,8 +144,14 @@ public class ArticleDao_Impl(
           val _tmp: Int
           _tmp = _stmt.getLong(_columnIndexOfIsCompleted).toInt()
           _tmpIsCompleted = _tmp != 0
+          val _tmpImageUri: String?
+          if (_stmt.isNull(_columnIndexOfImageUri)) {
+            _tmpImageUri = null
+          } else {
+            _tmpImageUri = _stmt.getText(_columnIndexOfImageUri)
+          }
           _item =
-              ArticleEntity(_tmpId,_tmpTitle,_tmpContent,_tmpDateAdded,_tmpDateCompleted,_tmpIsCompleted)
+              ArticleEntity(_tmpId,_tmpTitle,_tmpContent,_tmpDateAdded,_tmpDateCompleted,_tmpIsCompleted,_tmpImageUri)
           _result.add(_item)
         }
         _result
@@ -155,6 +174,7 @@ public class ArticleDao_Impl(
         val _columnIndexOfDateAdded: Int = getColumnIndexOrThrow(_stmt, "dateAdded")
         val _columnIndexOfDateCompleted: Int = getColumnIndexOrThrow(_stmt, "dateCompleted")
         val _columnIndexOfIsCompleted: Int = getColumnIndexOrThrow(_stmt, "isCompleted")
+        val _columnIndexOfImageUri: Int = getColumnIndexOrThrow(_stmt, "imageUri")
         val _result: ArticleEntity?
         if (_stmt.step()) {
           val _tmpId: Long
@@ -175,8 +195,14 @@ public class ArticleDao_Impl(
           val _tmp: Int
           _tmp = _stmt.getLong(_columnIndexOfIsCompleted).toInt()
           _tmpIsCompleted = _tmp != 0
+          val _tmpImageUri: String?
+          if (_stmt.isNull(_columnIndexOfImageUri)) {
+            _tmpImageUri = null
+          } else {
+            _tmpImageUri = _stmt.getText(_columnIndexOfImageUri)
+          }
           _result =
-              ArticleEntity(_tmpId,_tmpTitle,_tmpContent,_tmpDateAdded,_tmpDateCompleted,_tmpIsCompleted)
+              ArticleEntity(_tmpId,_tmpTitle,_tmpContent,_tmpDateAdded,_tmpDateCompleted,_tmpIsCompleted,_tmpImageUri)
         } else {
           _result = null
         }
