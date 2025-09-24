@@ -40,7 +40,7 @@ class ClearSearchHistoryUseCase(private val repository: SearchRepository) {
 }
 
 
-// Optional: group them together for easier injection
+
 data class SearchUseCases(
     val searchArticles: SearchArticlesUseCase,
     val saveSearchQuery: SaveSearchQueryUseCase,

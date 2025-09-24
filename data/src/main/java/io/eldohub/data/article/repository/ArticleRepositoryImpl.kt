@@ -43,7 +43,7 @@ fun ArticleEntity.toDomain() = Article(
     dateAdded = Date(dateAdded),
     dateCompleted = dateCompleted?.let { Date(it) },
     isCompleted = isCompleted,
-    imageUri = imageUri // 👈 carry over
+    imageUri = imageUri
 )
 
 fun Article.toEntity() = ArticleEntity(
@@ -53,6 +53,6 @@ fun Article.toEntity() = ArticleEntity(
     dateAdded = dateAdded.time,
     dateCompleted = dateCompleted?.time,
     isCompleted = isCompleted,
-    imageUri = imageUri // 👈 carry over
+    imageUri = imageUri
 )
 

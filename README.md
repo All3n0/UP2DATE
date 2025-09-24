@@ -1,5 +1,4 @@
 //NEWSFEED
--webview
 -lower the title or remove
 -spacing between the articles AND horizontal
 -local search bar

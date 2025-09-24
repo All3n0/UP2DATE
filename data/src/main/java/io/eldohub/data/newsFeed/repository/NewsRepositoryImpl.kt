@@ -13,12 +13,12 @@ class NewsRepositoryImpl(
 
     override suspend fun getEverything(params: Map<String, String>): NewsResponse {
         val response = remoteDataSource.getEverything(params)
-        return response.toDomain() // skip caching
+        return response.toDomain()
     }
 
     override suspend fun getTopHeadlines(params: Map<String, String>): NewsResponse {
         val response = remoteDataSource.getTopHeadlines(params)
-        return response.toDomain() // skip caching
+        return response.toDomain()
     }
 }
 

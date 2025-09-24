@@ -45,7 +45,7 @@ data class SourceData(
 )
 
 
-// ✅ Mapping to domain models
+// Mapping to domain models
 internal fun NewsResponseData.toDomain() = NewsResponse(
     status = status,
     totalResults = totalResults,

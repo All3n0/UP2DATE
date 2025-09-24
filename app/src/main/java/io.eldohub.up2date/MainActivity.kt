@@ -30,13 +30,9 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = NEWS_FEED_NAVIGATION
                     ) {
-                        // Only include the main News Feed feature
-                        // The favourites and articles screens are embedded within the pager
+
                         newsFeedFeatureNavGraph(navController = navController)
 
-                        // REMOVE these lines - they don't exist and cause crashes:
-                        // favouritesFeatureNavGraph(navController = navController)
-                        // articlesFeatureNavGraph(navController = navController)
                     }
                 }
             }

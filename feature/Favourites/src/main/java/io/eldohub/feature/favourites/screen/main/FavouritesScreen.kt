@@ -44,11 +44,11 @@ fun FavouritesScreen(
             modifier = Modifier
                 .background(Color.White)
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(24.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(bottom = 8.dp, top = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp, top = 24.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Favorite,
@@ -112,7 +112,7 @@ fun FavouritesScreen(
                         article = article,
                         onClick = { onArticleClick(article) }
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(18.dp))
                 }
             }
         }

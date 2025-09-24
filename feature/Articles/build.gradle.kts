@@ -37,7 +37,10 @@ dependencies {
 
     implementation(project(":core:ui"))
     implementation(project(":domain"))
-
+    implementation("androidx.compose.ui:ui:1.6.0")
+// or newer
+    implementation("androidx.compose.material3:material3:1.2.0")
+// or newer
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.material3)

@@ -49,7 +49,7 @@ fun NewsFeedScreen(
             modifier = Modifier
                 .background(Color.White)
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp, vertical = 24.dp)
         ) {
             Spacer(modifier = Modifier.height(12.dp)) // padding above the title
 
@@ -114,10 +114,11 @@ fun NewsFeedScreen(
 
 
         // 🔄 Pull to refresh
-        val isRefreshing = uiState is NewsFeedUiState.Loading
+        val uiState by viewModel.uiState.collectAsState()
+        val isRefreshing by viewModel.isRefreshing.collectAsState()
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing),
-            onRefresh = { viewModel.fetchTopHeadlines() },
+            onRefresh = { viewModel.fetchTopHeadlines(isUserRefresh = true) },
             modifier = Modifier.fillMaxSize()
         ) {
             LazyColumn(

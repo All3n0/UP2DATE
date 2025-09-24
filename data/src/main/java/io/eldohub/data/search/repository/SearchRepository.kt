@@ -13,5 +13,5 @@ interface SearchRepository {
 
     suspend fun clearSearchHistory()
 
-    suspend fun removeSearchQuery(query: String)  // ✅ add query parameter
+    suspend fun removeSearchQuery(query: String)
 }

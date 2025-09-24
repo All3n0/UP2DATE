@@ -9,5 +9,5 @@ data class Article(
     val dateAdded: Date = Date(),
     val dateCompleted: Date? = null,
     val isCompleted: Boolean = false,
-    val imageUri: String? = null // <-- new field for article image
+    val imageUri: String? = null
 )

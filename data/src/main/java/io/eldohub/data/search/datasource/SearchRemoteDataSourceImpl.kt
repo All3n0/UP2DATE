@@ -16,7 +16,7 @@ class SearchRemoteDataSourceImpl(
             parameter("q", query)
             parameter("page", page)
             parameter("pageSize", 20)
-            // optional: parameter("sortBy", "relevancy")
+
         }.body()
     }
 }

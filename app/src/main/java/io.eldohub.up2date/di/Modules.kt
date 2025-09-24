@@ -87,7 +87,7 @@ val DomainModule = module {
     factory { SaveSearchQueryUseCase(get()) }
     factory { GetSearchHistoryUseCase(get()) }
     factory { ClearSearchHistoryUseCase(get()) }
-    factory { RemoveSearchQueryUseCase(get()) }  // ✅ add this
+    factory { RemoveSearchQueryUseCase(get()) }
 
     // Aggregated SearchUseCases container
     factory {
@@ -104,5 +104,5 @@ val DomainModule = module {
     viewModel { ArticleViewModel(get()) }
     viewModel { NewsFeedViewModel(get()) }
     viewModel { NewsDetailsViewModel() }
-    viewModel { SearchViewModel(get()) } // inject SearchUseCases
+    viewModel { SearchViewModel(get()) }
 }

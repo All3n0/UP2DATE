@@ -52,7 +52,7 @@ fun SearchScreen(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp, top = 24.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Search,
@@ -204,7 +204,7 @@ fun SearchScreen(
                     ) {
                         items(articles) { article ->
                             SearchArticleCard(article = article, onClick = { onArticleClick(article) })
-                            Spacer(modifier = Modifier.height(12.dp))
+                            Spacer(modifier = Modifier.height(18.dp))
                         }
                     }
                 }
